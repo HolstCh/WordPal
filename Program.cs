@@ -1,21 +1,56 @@
-using System; // String, Console, Math, etc.
-using System.Net.Http; // HTTPClient for HTTP requests
-using System.Net.Http.Json;
-using System.Text; // Encoding for text encodings
-using System.Threading.Tasks; // Task for asynchronous programming 
-using Newtonsoft.Json; // JsonConvert for converting to JSON objects and JSON strings
-using Newtonsoft.Json.Linq;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using dotenv.net;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
+using Serilog;
 
-namespace HuggingFaceDemo
+namespace WordPal
 {
-    class Program
+    public class Program
     {
-        static async Task Main(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+      Host.CreateDefaultBuilder(args)
+          .ConfigureWebHostDefaults(webBuilder =>
+          {
+              webBuilder.UseStartup<Startup>();
+          });
+        public static async Task Main(string[] args)
         {
-            // load variables from .env file
-            DotEnv.Load();     
+            // Configure Serilog for .NET console application logs
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
 
+            try
+            {
+                Log.Information("Starting up the application");
+
+                // Load environment variables from .env file (if using dotenv.net)
+                DotEnv.Load();
+
+                // Example usage of HttpClient to interact with API
+                await UseHuggingFaceAPI();
+
+                // Create and run the web host
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "The application failed to start correctly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+
+        static async Task UseHuggingFaceAPI()
+        {
             var hfApiKey = Environment.GetEnvironmentVariable("HF_API_KEY");
             var apiUrl = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct";
 
@@ -23,39 +58,35 @@ namespace HuggingFaceDemo
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {hfApiKey}");
 
             var requestData = new { inputs = "how to make an apple pie?" };
-
-            while (true)
+            try
             {
-                try
+                var response = await httpClient.PostAsJsonAsync(apiUrl, requestData);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = await httpClient.PostAsJsonAsync(apiUrl, requestData);
+                    string responseBody = await response.Content.ReadAsStringAsync();
 
-                    if (response.IsSuccessStatusCode)
+                    // Parse JSON using JArray from Json.NET
+                    var jsonResponse = JArray.Parse(responseBody);
+
+                    Log.Information("API Response received:");
+
+                    // Access and work with jsonResponse (assuming it's an array)
+                    foreach (var item in jsonResponse)
                     {
-                        string responseBody = await response.Content.ReadAsStringAsync();
-
-                        // Parse JSON using JArray from Json.NET
-                        var jsonResponse = JArray.Parse(responseBody);
-
-                        // Access and work with jsonResponse (assuming it's an array)
-                        foreach (var item in jsonResponse)
-                        {
-                            Console.WriteLine($"Item: {item}");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"HTTP Error: {response.StatusCode} - {response.ReasonPhrase}");
+                        Console.WriteLine($"Item: {item}");
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    Console.WriteLine($"HTTP Error: {response.StatusCode} - {response.ReasonPhrase}");
                 }
-
-                // Optional: Add a delay before making the next request to avoid hitting rate limits
-                await Task.Delay(5000); // 5 seconds delay (adjust as needed)
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error: {ex.Message}");
+            }
+
         }
     }
 }
