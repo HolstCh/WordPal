@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WordPal.Services;
 
 namespace WordPal
 {
@@ -18,6 +19,8 @@ namespace WordPal
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient<IHuggingFaceApiService, HuggingFaceApiService>();
+            services.AddControllers();
             services.AddControllersWithViews();
 
             // Configure static files for serving React app in production
