@@ -19,9 +19,16 @@ export default function Input() {
     }
 
     return (
-        <button onClick={handleButtonClick}>
-            Click
-        </button>
+        <>
+            <button onClick={handleButtonClick}>
+                Click
+            </button>
+            <div className="bg-violet-900 p-4 shadow-md rounded-lg">
+                <h1 className="text-2xl font-bold text-gray-800">Hello, Tailwind!</h1>
+                <p className="text-blue-600 mt-2">This is a Tailwind CSS example in React.</p>
+            </div>
+        </>
+       
     );
 
 }
