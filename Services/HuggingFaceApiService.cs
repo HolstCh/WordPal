@@ -34,8 +34,9 @@ namespace WordPal.Services
         {
             try
             {
-                Console.WriteLine("hi3");
-                var payload = new { inputs = inputText };
+
+                var formattedInput = $"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{inputText}<|eot_id|>";
+                var payload = new { inputs = formattedInput };
                 var response = await _httpClient.PostAsJsonAsync(apiUrl, payload);
                 response.EnsureSuccessStatusCode();
                 var responseBody = await response.Content.ReadAsStringAsync();

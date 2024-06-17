@@ -20,37 +20,39 @@ export default function Input() {
     // Example of using the function
     const handleButtonClick = async () => {
 
+        const currentInputText = inputText.trim();
         // prevent empty input
-        if (!inputText.trim()) {
+        if (!currentInputText) {
             return;
         }
 
-        const userChatMessage = [...chatHistory, { type: 'user', text: inputText }];
-        setChatHistory(userChatMessage);
+        const userChatMessage = { type: 'user', text: currentInputText };
+        setChatHistory(chatHistory => [...chatHistory, userChatMessage]);
 
-        const result = await generateText(inputText);
+        const result = await generateText(currentInputText);
         let generatedResponse = result.generatedText;
-        
-        generatedResponse.replace(new RegExp(inputText, 'gi'), '');
-        console.log(inputText);
         console.log(generatedResponse);
-        const modelChatMessage = [...chatHistory, { type: 'model', text: generatedResponse }];
-        setChatHistory(modelChatMessage);
-
+        
+        const regex = new RegExp(`<|begin_of_text|><|start_header_id|>user<|end_header_id|>\\n\\n${currentInputText}<|eot_id|>assistant\\n\\n`, 'gi');
+        generatedResponse = generatedResponse.replace(regex, '');
+        generatedResponse = generatedResponse.replace(/\|{2,}/g, '');
+        console.log(currentInputText);
+        console.log(generatedResponse);
+        const modelChatMessage = { type: 'model', text: generatedResponse };
+        setChatHistory(chatHistory => [...chatHistory, modelChatMessage]);
         setInputText('');
     }
 
     const createMarkup = (text) => {
-        if (typeof text === 'undefined' || text === null) return { __html: '' }; 
+        if (typeof text !== 'string') return { __html: '' };
         const sanitizedText = DOMPurify.sanitize(text.replace(/\n/g, '<br/>'));
         return { __html: sanitizedText };
     };
 
+
     return (
         <section id="chat-page">
             <div className="w-1/2 bg-blue-100 p-4 shadow-md rounded-lg">
-                <h1 className="text-2xl font-bold text-gray-800">Hello, Tailwind!</h1>
-                <p className="text-blue-600 mt-2">This is a Tailwind CSS example in React.</p>
                 {chatHistory.map((message, index) => (
                     <div key={index} className={`mb-4 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
                         <p className="text-gray-600">{message.type === 'user' ? 'You' : 'Model'}</p>
@@ -59,8 +61,6 @@ export default function Input() {
                 ))}
             </div>
             <div className="w-1/2 bg-gray-200 p-4 shadow-md rounded-3xl">
-                <h1 className="text-2xl font-bold text-gray-800">Hello, Tailwind!</h1>
-                <p className="text-blue-600 mt-2">This is a Tailwind CSS example in React.</p>
                 <input
                     type="text"
                     value={inputText}
