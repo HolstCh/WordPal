@@ -1,11 +1,36 @@
 ﻿import axios from 'axios';
 import DOMPurify from 'dompurify';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+import SendSharpIcon from '@mui/icons-material/SendSharp';
+import { debounce } from 'lodash';
 
 export default function Input() {
 
+    window.ResizeObserver = undefined; // could lead to questionable behaviour
     const [inputText, setInputText] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
+    const textAreaRef = useRef(null);
+
+    useEffect(() => {
+        const textarea = textAreaRef.current;
+        const debouncedResize = debounce(() => {
+            if (textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = `${textarea.scrollHeight}px`;
+            }
+        }, 500); // 100ms debounce time
+
+        if (textarea) {
+            textarea.addEventListener('input', debouncedResize);
+        }
+
+        return () => {
+            if (textarea) {
+                textarea.removeEventListener('input', debouncedResize);
+            }
+        };
+    }, []);
 
 
     const generateText = async (inputText) => {
@@ -32,8 +57,8 @@ export default function Input() {
         const result = await generateText(currentInputText);
         let generatedResponse = result.generatedText;
         console.log(generatedResponse);
-        
-        const regex = new RegExp(`<|begin_of_text|><|start_header_id|>user<|end_header_id|>\\n\\n${currentInputText}<|eot_id|>assistant\\n\\n`, 'gi');
+
+        const regex = /[\s\S]*assistant\s*/i;
         generatedResponse = generatedResponse.replace(regex, '');
         generatedResponse = generatedResponse.replace(/\|{2,}/g, '');
         console.log(currentInputText);
@@ -49,26 +74,26 @@ export default function Input() {
         return { __html: sanitizedText };
     };
 
-
     return (
-        <section id="chat-page">
-            <div className="w-1/2 bg-blue-100 p-4 shadow-md rounded-lg">
+        <section id="chat-page" className="flex flex-col items-center">
+            <div className="w-1/2 bg-blue-100 p-4 shadow-md rounded-3xl whitespace-normal overflow-y-auto max-h-96">
                 {chatHistory.map((message, index) => (
                     <div key={index} className={`mb-4 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
                         <p className="text-gray-600">{message.type === 'user' ? 'You' : 'Model'}</p>
-                        <div dangerouslySetInnerHTML={createMarkup(message.text)}></div>
+                        <div className="break-words" dangerouslySetInnerHTML={createMarkup(message.text)}></div>
                     </div>
                 ))}
             </div>
-            <div className="w-1/2 bg-gray-200 p-4 shadow-md rounded-3xl">
-                <input
-                    type="text"
+            <div className="w-1/2 bg-gray-200 p-4 shadow-md rounded-3xl flex flex-row items-center">
+                <TextareaAutosize
+                    ref={textAreaRef}
+                    minRows={1}
+                    maxRows={10}
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
+                    className="w-full mr-2 p-2 overflow-hidden rounded-3xl resize-none"
                 />
-                <button onClick={handleButtonClick}>
-                    Click
-                </button>
+                <SendSharpIcon onClick={handleButtonClick} className="hover:text-blue-400 cursor-pointer" />
             </div>
         </section>
        

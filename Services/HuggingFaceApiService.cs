@@ -27,7 +27,7 @@ namespace WordPal.Services
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(apiUrl);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", hfApiKey);
-            Console.WriteLine("hi2");
+   
         }
 
         public async Task<HuggingFaceResponse> GenerateText(string inputText)
