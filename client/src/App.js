@@ -1,11 +1,14 @@
-import Input from './components/Input'
+import ChatInterface from './components/ChatInterface'
 import NavBar from './components/NavBar'
+import React, {useState } from 'react'
 
 function App() {
+
+    const [openSidebar, setOpenSidebar] = useState(false);
     return (
         <>
-            <NavBar />
-            <Input />
+            <NavBar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+            <ChatInterface openSidebar={openSidebar} />
         </>
   );
 }
