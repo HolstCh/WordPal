@@ -42,7 +42,6 @@ export default function Input() {
         }
     }
 
-    // Example of using the function
     const handleButtonClick = async () => {
 
         const currentInputText = inputText.trim();
@@ -75,8 +74,8 @@ export default function Input() {
     };
 
     return (
-        <section id="chat-page" className="flex flex-col items-center">
-            <div className="w-1/2 bg-blue-100 p-4 shadow-md rounded-3xl whitespace-normal overflow-y-auto max-h-96">
+        <section id="chat-page" className="flex flex-col items-end">
+            <div className="w-2/3 bg-blue-100 p-4 shadow-md rounded-3xl whitespace-normal overflow-y-auto max-h-96">
                 {chatHistory.map((message, index) => (
                     <div key={index} className={`mb-4 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
                         <p className="text-gray-600">{message.type === 'user' ? 'You' : 'Model'}</p>
@@ -84,7 +83,7 @@ export default function Input() {
                     </div>
                 ))}
             </div>
-            <div className="w-1/2 bg-gray-200 p-4 shadow-md rounded-3xl flex flex-row items-center">
+            <div className="w-2/3 bg-gray-200 p-4 shadow-md rounded-3xl flex flex-row items-center">
                 <TextareaAutosize
                     ref={textAreaRef}
                     minRows={1}

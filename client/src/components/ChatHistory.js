@@ -14,7 +14,7 @@ export default function ChatHistory() {
         <div>
             <MessageSharpIcon onClick={handleClick} className="hover:text-blue-500 cursor-pointer" sx={{ fontSize: { xs: 25, sm: 30, md: 40 } }} />
             {openSidebar ?
-                <div id="sidebar" class="left-0 h-full bg-blue-500 w-64 transform translate-x-0 transition-transform duration-200 ease-in-out"></div>
+                <div id="sidebar" className="fixed overflow-y-auto left-0 h-full bg-blue-500 w-1/3 transform translate-x-0 transition-transform duration-1000 ease-in-out rounded-3xl"></div>
             : null
             }
         </div>
