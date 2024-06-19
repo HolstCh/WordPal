@@ -19,7 +19,7 @@ export default function Input() {
                 textarea.style.height = 'auto';
                 textarea.style.height = `${textarea.scrollHeight}px`;
             }
-        }, 500); // 100ms debounce time
+        }, 500);
 
         if (textarea) {
             textarea.addEventListener('input', debouncedResize);
@@ -93,10 +93,8 @@ export default function Input() {
                     onChange={(e) => setInputText(e.target.value)}
                     className="w-full mr-2 p-2 overflow-hidden rounded-3xl resize-none"
                 />
-                <SendSharpIcon onClick={handleButtonClick} className="hover:text-blue-400 cursor-pointer" />
+                <SendSharpIcon onClick={handleButtonClick} sx={{ fontSize: { xs: 20, sm: 20, md: 30 } }} className="hover:text-blue-400 cursor-pointer" />
             </div>
         </section>
-       
     );
-
 }

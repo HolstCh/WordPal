@@ -36,7 +36,13 @@ namespace WordPal.Services
             {
 
                 var formattedInput = $"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{inputText}<|eot_id|>";
-                var payload = new { inputs = formattedInput };
+                var payload = new 
+                {   inputs = formattedInput,
+                    temperature = 0.2,
+                    top_k = 50,
+                    top_p = 0.9,
+                    max_tokens = 10,
+                };
                 var response = await _httpClient.PostAsJsonAsync(apiUrl, payload);
                 response.EnsureSuccessStatusCode();
                 var responseBody = await response.Content.ReadAsStringAsync();

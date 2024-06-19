@@ -1,8 +1,12 @@
 import Input from './components/Input'
+import NavBar from './components/NavBar'
 
 function App() {
-  return (
-    <Input/>
+    return (
+        <>
+            <NavBar />
+            <Input />
+        </>
   );
 }
 
