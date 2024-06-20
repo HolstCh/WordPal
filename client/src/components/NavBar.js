@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import ProfileIcon from "./ProfileIcon";
+import ProfileMenu from './ProfileMenu'
 import ChatHistorySidebar from './ChatHistorySidebar';
 
 export default function NavBar({openSidebar, setOpenSidebar }) {
@@ -7,7 +7,7 @@ export default function NavBar({openSidebar, setOpenSidebar }) {
     return (
         <div className="flex flex-row items-center justify-between mx-3 mt-3">
             <ChatHistorySidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
-            <ProfileIcon />
+            <ProfileMenu />
         </div>
     );
 }
