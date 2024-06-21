@@ -11,6 +11,11 @@
     <PackageReference Include="HuggingFace" Version="0.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Numind.AspNetCore.SpaServices.Extensions" Version="1.0.1" />

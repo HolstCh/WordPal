@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WordPal.Services;
+using WordPal.Data;
 
 namespace WordPal
 {
@@ -19,11 +21,14 @@ namespace WordPal
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // register the DbContext with a connection string
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddHttpClient<IHuggingFaceApiService, HuggingFaceApiService>();
             services.AddControllers();
             services.AddControllersWithViews();
 
-            // Configure static files for serving React app in production
+            // configure static files for serving React app in production
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "client/build";
