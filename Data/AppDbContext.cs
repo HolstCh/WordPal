@@ -3,13 +3,13 @@ using WordPal.Models;
 
 namespace WordPal.Data
 {
-    public class AppDbContext: DbContext
+    public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 
-        // models that represent tables/schemas
+        // Models that represent tables/schemas
         public DbSet<User> Users { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
@@ -19,16 +19,18 @@ namespace WordPal.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // define relationships and configure each model
+            // Define relationships and configure each model
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Conversations)
                 .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId);
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Conversation>()
                 .HasMany(c => c.Messages)
                 .WithOne(m => m.Conversation)
-                .HasForeignKey(m => m.ConversationId);
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<MessagePair>()
                 .HasOne(mp => mp.UserMessage)

@@ -1,5 +1,6 @@
 import ChatInterface from './components/ChatInterface'
 import NavBar from './components/NavBar'
+import SignUp from './pages/SignUp'
 import React, {useState } from 'react'
 
 function App() {
@@ -7,8 +8,9 @@ function App() {
     const [openSidebar, setOpenSidebar] = useState(false);
     return (
         <>
-            <NavBar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
-            <ChatInterface openSidebar={openSidebar} />
+            <SignUp/>
+            {/*<NavBar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+            <ChatInterface openSidebar={openSidebar} />*/}
         </>
   );
 }

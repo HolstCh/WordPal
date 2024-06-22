@@ -25,6 +25,7 @@ namespace WordPal
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddHttpClient<IHuggingFaceApiService, HuggingFaceApiService>();
+            services.AddScoped<IUserDbService, UserDbService>();
             services.AddControllers();
             services.AddControllersWithViews();
 

@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import MessageSharpIcon from '@mui/icons-material/MessageSharp';
-import ToggleButtons from './ToggleButtons'
+import ToggleButtons from './ToggleButtons';
+import ChatHistoryTabs from './ChatHistoryTabs';
 export default function ChatHistorySidebar({openSidebar, setOpenSidebar }) {
     function handleClick() {
         if (!openSidebar)
@@ -15,6 +16,7 @@ export default function ChatHistorySidebar({openSidebar, setOpenSidebar }) {
             {openSidebar ?
                 <div id="sidebar" className="fixed bg-gray-100 overflow-y-auto left-0 h-full border-2 border-gray-200 w-1/3 rounded-3xl">
                     <ToggleButtons />
+                    <ChatHistoryTabs />
                 </div>
             : null
             }
