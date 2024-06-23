@@ -1,5 +1,8 @@
 ﻿using WordPal.Models;
 using WordPal.Data;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +13,7 @@ namespace WordPal.Services
     {
         Task CreateUser(string username, string password);
         Task<User> GetUserById(int userId);
+        Task<User> Login(string username, string password);
     }
 
     public class UserDbService: IUserDbService
@@ -36,6 +40,17 @@ namespace WordPal.Services
         public async Task<User> GetUserById(int userId)
         {
             return _context.Users.Find(userId);
+        }
+
+        public async Task<User> Login(string username, string password)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username && u.Password == password);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return user;
         }
 
     }

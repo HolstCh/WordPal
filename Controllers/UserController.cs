@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WordPal.Models;
 using WordPal.Services;
@@ -30,12 +31,23 @@ namespace WordPal.Controllers
             try
             {
                 await _userService.CreateUser(user.Username, user.Password);
-                return Ok(user.Id);
+                return Ok(user);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] User user)
+        {
+            var auth = await _userService.Login(user.Username, user.Password);
+            if (auth != null)
+            {
+                return Ok(user);
+            }
+            return StatusCode(500);
         }
 
         [HttpGet]

@@ -10,31 +10,16 @@ export default function ChatHistoryTabs() {
     };
 
     return (
-        <div className="flex flex-col items-center h-full w-full bg-gray-100 overflow-hidden">
+        <div className="flex flex-col items-center w-full bg-gray-100 overflow-hidden py-3">
             <Tabs
                 value={value}
                 onChange={handleChange}
                 variant="scrollable"
                 scrollButtons="auto"
                 orientation="vertical"
-                className="flex-1 overflow-y-auto border-2"
+                className="flex-1 border"
             >
                 <Tab label="Item One" className={`${value ? 'bg-blue-100' : null}`}>{value}</Tab>
-                <Tab label="Item Two" />
-                <Tab label="Item Three" />
-                <Tab label="Item Four" />
-                <Tab label="Item Five" />
-                <Tab label="Item Six" />
-                <Tab label="Item Eight" />
-                <Tab label="Item Nine" />
-                <Tab label="Item Ten" />
-                <Tab label="Item Eleven" />
-                <Tab label="Item Twelve" />
-                <Tab label="Item Thirteen" />
-                <Tab label="Item Fourteen" />
-                <Tab label="Item Fifteen" />
-                <Tab label="Item Sixteen" />
-                <Tab label="Item Seventeen" />
             </Tabs>
         </div>
     );

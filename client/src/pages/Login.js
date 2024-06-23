@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Copyright(props) {
@@ -30,14 +31,35 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignInSide() {
-    const handleSubmit = (event) => {
+export default function Login()
+{
+    const login = async (newUser) => {
+        try {
+            const response = await axios.post('https://localhost:7204/api/user/login', newUser);
+            return response;
+        }
+        catch (error) {
+            console.error("Error logging in", error);
+        }
+    };
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
+        const user = {
+            username: data.get('username'),
             password: data.get('password'),
-        });
+        };
+
+        console.log(user);
+
+        const response = await login(user);
+        console.log(response);
+        if (!response)
+        {
+
+        }
+
     };
 
     return (
@@ -81,7 +103,7 @@ export default function SignInSide() {
                                 fullWidth
                                 id="email"
                                 label="Email Address"
-                                name="email"
+                                name="username"
                                 autoComplete="email"
                                 autoFocus
                             />
@@ -101,6 +123,7 @@ export default function SignInSide() {
                             />
                             <Button
                                 type="submit"
+                                onSubmit={handleSubmit}
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
