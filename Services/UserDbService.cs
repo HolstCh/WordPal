@@ -11,7 +11,7 @@ namespace WordPal.Services
 {
     public interface IUserDbService
     {
-        Task CreateUser(string username, string password);
+        Task<User> CreateUser(string username, string password);
         Task<User> GetUserById(int userId);
         Task<User> Login(string username, string password);
     }
@@ -24,7 +24,7 @@ namespace WordPal.Services
             _context = context;
         }
 
-        public async Task CreateUser(string username, string password)
+        public async Task<User> CreateUser(string username, string password)
         {
             var newUser = new User
             {
@@ -35,6 +35,8 @@ namespace WordPal.Services
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
+            Console.WriteLine($"New User ID: {newUser.Id}");
+            return newUser;
         }
 
         public async Task<User> GetUserById(int userId)

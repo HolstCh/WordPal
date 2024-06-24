@@ -18,6 +18,16 @@ export default function ChatInterface({openSidebar}) {
         }
     }
 
+    const getUser = async (id) => {
+        try {
+            const response = await axios.get(`https://localhost:7204/api/user/${id}`);
+            return response;
+        }
+        catch (error) {
+            console.error("Error creating user", error);
+        }
+    };
+
     const handleButtonClick = async () => {
 
         const currentInputText = inputText.trim();
@@ -41,6 +51,9 @@ export default function ChatInterface({openSidebar}) {
         const modelChatMessage = { type: 'model', text: generatedResponse };
         setChatHistory(chatHistory => [...chatHistory, modelChatMessage]);
         setInputText('');
+        const userData = await getUser(3);
+        console.log(userData);
+        
     }
 
     return (

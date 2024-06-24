@@ -30,8 +30,7 @@ namespace WordPal.Controllers
 
             try
             {
-                await _userService.CreateUser(user.Username, user.Password);
-                return Ok(user);
+                return Ok(await _userService.CreateUser(user.Username, user.Password));
             }
             catch (Exception ex)
             {

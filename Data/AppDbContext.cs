@@ -19,7 +19,15 @@ namespace WordPal.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Define relationships and configure each model
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Username).IsRequired();
+                entity.Property(e => e.Password).IsRequired();
+                entity.Property(e => e.CreatedAt).IsRequired();
+            });
+
+            // define relationships and configure each model
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Conversations)
                 .WithOne(c => c.User)

@@ -43,6 +43,16 @@ export default function SignUp() {
         }
     };
 
+    const getUser = async (id) => {
+        try {
+            const response = await axios.get(`https://localhost:7204/api/user/${id}`);
+            return response;
+        }
+        catch (error) {
+            console.error("Error creating user", error);
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -53,6 +63,9 @@ export default function SignUp() {
         }
 
         const result = await createUser(user);
+        console.log(result);
+        const userData = await getUser(result.data.id);
+        console.log(userData);
 
         if (result.status === 200) {
 

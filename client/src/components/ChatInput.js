@@ -5,7 +5,7 @@ export default function ChatInput({ inputText, setInputText, handleButtonClick }
     window.ResizeObserver = undefined; // could lead to questionable behaviour
 
     return (
-        <div className="w-2/3 p-4 rounded-3xl border border-gray-200 flex flex-row items-center">
+        <div className="w-2/3 p-4 rounded-3xl border border-gray-200 flex flex-row items-center fixed bottom-3">
             <TextareaAutosize
                 minRows={1}
                 maxRows={10}
