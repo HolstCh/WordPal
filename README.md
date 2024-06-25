@@ -1,14 +1,13 @@
 # WordPal
 
-WordPal is a conversational application leveraging the capabilities of the Model Meta Llama 3 for advanced messaging and conversation handling. The project is built using ASP.NET Core for the backend, Entity Framework Core for database management, and React for the frontend.
+WordPal is a conversational application that uses Meta Llama 3 for AI responses through an API. The project is built using ASP.NET Core for the backend, Entity Framework Core for database management, and React for the frontend. This project is currently in progress.
 
 ## Project Description
 
 WordPal utilizes modern web technologies to provide a robust platform for managing user conversations. Key features include:
 
-- **User Management**: Registration, authentication, and profile management.
-- **Conversations**: Support for initiating and maintaining user conversations.
-- **Messages**: Efficient message handling and storage.
+- **User Management**: Registration and profile management.
+- **Conversations**: Chat history, pinned messages, and message search.
 - **Model Meta Llama 3**: Integration with the Model Meta Llama 3 for enhanced conversational AI capabilities.
 
 ## Dependencies
@@ -28,70 +27,6 @@ WordPal utilizes modern web technologies to provide a robust platform for managi
 - [remark-gfm](https://github.com/remarkjs/remark-gfm)
 - [rehype-raw](https://github.com/rehypejs/rehype-raw)
 - [rehype-sanitize](https://github.com/rehypejs/rehype-sanitize)
-
-## Setup Instructions
-
-### Backend
-
-1. **Clone the repository**:
-
-    ```bash
-    git clone https://github.com/yourusername/wordpal.git
-    cd wordpal
-    ```
-
-2. **Navigate to the WordPal project directory**:
-
-    ```bash
-    cd WordPal
-    ```
-
-3. **Install the required .NET packages**:
-
-    ```bash
-    dotnet restore
-    ```
-
-4. **Update the database connection string in `appsettings.json`**:
-
-    ```json
-    "ConnectionStrings": {
-        "DefaultConnection": "Server=your server name;Database=your database name;Trusted_Connection=True;TrustServerCertificate=True;"
-    }
-    ```
-
-5. **Create and apply the database migrations**:
-
-    ```bash
-    dotnet ef migrations add InitialCreate
-    dotnet ef database update
-    ```
-
-6. **Run the backend server**:
-
-    ```bash
-    dotnet run
-    ```
-
-### Frontend
-
-1. **Navigate to the `ClientApp` directory**:
-
-    ```bash
-    cd ClientApp
-    ```
-
-2. **Install the required npm packages**:
-
-    ```bash
-    npm install
-    ```
-
-3. **Run the frontend development server**:
-
-    ```bash
-    npm start
-    ```
 
 ## License
 
