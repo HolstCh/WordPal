@@ -2,14 +2,6 @@
 
 WordPal is a conversational application that uses Meta Llama 3 for AI responses through a custom API. The project is built using ASP.NET Core for the backend, Entity Framework Core for database management, and React for the frontend. This project is currently in progress.
 
-## Project Description
-
-WordPal utilizes modern web technologies to provide a robust platform for managing user conversations. Key features include:
-
-- **User Management**: Registration and profile management.
-- **Conversations**: Chat history, pinned messages, and message search.
-- **Model Meta Llama 3**: Integration with the Model Meta Llama 3 for enhanced conversational AI capabilities.
-
 ## Dependencies
 
 ### Backend
