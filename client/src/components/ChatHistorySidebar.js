@@ -10,6 +10,8 @@ export default function ChatHistorySidebar({ openSidebar, setOpenSidebar, initia
     const [value, setValue] = useState(0);
 
     useEffect(() => {
+        initialConvos.sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+        setValue(0);
         setConvos(initialConvos || []);
     }, [initialConvos]);
 
@@ -45,7 +47,8 @@ export default function ChatHistorySidebar({ openSidebar, setOpenSidebar, initia
         console.log("here", newConvo);
         if (newConvo) {
             setConvos(prevConvos => [...prevConvos, newConvo.data]);
-            setValue(convos.length - 1);
+            convos.sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+            setValue(0);
         }
     }
 
