@@ -14,8 +14,8 @@ export default function ChatHistoryTabs({ convos, value, handleChange }) {
                 orientation="vertical"
                 className="flex-1 border"
             >
-            {convos.map((item, index) => (
-                <Tab label={item.label} key={index} className={`${value === index ? 'bg-blue-100' : null}`}></Tab>
+            {convos.map((item) => (
+                <Tab label={item.id} key={item.id} className={`${value === item.id ? 'bg-blue-100' : null}`}></Tab>
             ))}
             </Tabs>
         </div>

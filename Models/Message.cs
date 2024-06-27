@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int ConversationId { get; set; }
-        public string Sender { get; set; } // "User" or "Bot"
+        public string Sender { get; set; } // "User" or "Model"
         public string Content { get; set; }
         public DateTime SentAt { get; set; }
 

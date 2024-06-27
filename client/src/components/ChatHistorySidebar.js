@@ -3,10 +3,16 @@ import MessageSharpIcon from '@mui/icons-material/MessageSharp';
 import ToggleButtons from './ToggleButtons';
 import ChatHistoryTabs from './ChatHistoryTabs';
 import AddCommentSharpIcon from '@mui/icons-material/AddCommentSharp';
+import axios from 'axios';
 export default function ChatHistorySidebar({ openSidebar, setOpenSidebar, initialConvos }) {
 
-    const [convos, setConvos] = useState(initialConvos);
+    const [convos, setConvos] = useState(initialConvos || []);
     const [value, setValue] = useState(0);
+
+    useEffect(() => {
+        setConvos(initialConvos || []);
+    }, [initialConvos]);
+
     function handleClick() {
         if (!openSidebar)
             setOpenSidebar(true);
@@ -14,14 +20,33 @@ export default function ChatHistorySidebar({ openSidebar, setOpenSidebar, initia
             setOpenSidebar(false);
     }
 
+    const createConversation = async (userId) => {
+
+        try {
+            const response = await axios.post('/api/conversation', {
+                userId: userId,  // Replace with the actual user ID
+                startedAt: new Date().toISOString(),
+                endedAt: new Date().toISOString(),
+                messages: [],
+            });
+            console.log(response);
+            return response;
+        } catch (error) {
+            console.error('Error creating conversation:', error);
+        }
+    };
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    function handleAddConvo() {
-        const newConvo = { label: `New Convo ${convos.length + 1}` };
-        setConvos([...convos, newConvo]);
-        setValue(convos.length); // Set the new tab as the active tab
+    const handleAddConvo = async () => {
+        const newConvo = await createConversation(3);
+        console.log("here", newConvo);
+        if (newConvo) {
+            setConvos(prevConvos => [...prevConvos, newConvo.data]);
+            setValue(convos.length - 1);
+        }
     }
 
     return (

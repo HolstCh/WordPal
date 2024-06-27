@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useHistory } from "react-router-dom";
 
 function Copyright(props) {
     return (
@@ -55,8 +56,7 @@ export default function Login()
 
         const response = await login(user);
         console.log(response);
-        if (!response)
-        {
+        if (!response) {
 
         }
 

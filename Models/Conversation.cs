@@ -8,9 +8,6 @@ namespace WordPal.Models
         public DateTime StartedAt { get; set; }
         public DateTime? EndedAt { get; set; }
 
-        // many-to-one relationship with User
-        public User User { get; set; }
-
         // one-to-many relationship with Message
         public ICollection<Message> Messages { get; set; }
     }

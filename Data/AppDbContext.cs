@@ -19,6 +19,7 @@ namespace WordPal.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // User configuration
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -28,29 +29,27 @@ namespace WordPal.Data
             });
 
             // define relationships and configure each model
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Conversations)
-                .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
 
+            // Conversation and Messages relationship
             modelBuilder.Entity<Conversation>()
                 .HasMany(c => c.Messages)
                 .WithOne(m => m.Conversation)
                 .HasForeignKey(m => m.ConversationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<MessagePair>()
-                .HasOne(mp => mp.UserMessage)
-                .WithMany()
-                .HasForeignKey(mp => mp.UserMessageId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // MessagePair configuration
+            modelBuilder.Entity<MessagePair>(entity =>
+            {
+                entity.HasOne(mp => mp.UserMessage)
+                    .WithMany()
+                    .HasForeignKey(mp => mp.UserMessageId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<MessagePair>()
-                .HasOne(mp => mp.BotMessage)
-                .WithMany()
-                .HasForeignKey(mp => mp.BotMessageId)
-                .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(mp => mp.BotMessage)
+                    .WithMany()
+                    .HasForeignKey(mp => mp.BotMessageId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
     }
 }
