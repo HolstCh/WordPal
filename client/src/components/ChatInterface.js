@@ -2,12 +2,14 @@
 import React, { useState } from 'react';
 import CurrentConversation from './CurrentConversation'
 import ChatInput from './ChatInput'
+import { useSelector } from 'react-redux';
 
-export default function ChatInterface({openSidebar}) {
+export default function ChatInterface() {
 
     const [inputText, setInputText] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
 
+    const isSidebarOpen = useSelector((state) => state.uiState.isSidebarOpen);
 
     const generateText = async (inputText) => {
         try {
@@ -68,7 +70,7 @@ export default function ChatInterface({openSidebar}) {
     }
 
     return (
-        <section id="chat-interface" className={`${openSidebar ? 'items-end' : 'items-center'} flex flex-col`}>
+        <section id="chat-interface" className={`${isSidebarOpen ? 'items-end' : 'items-center'} flex flex-col`}>
             <CurrentConversation currentConversation={chatHistory} />
             <ChatInput handleButtonClick={handleButtonClick} inputText={inputText} setInputText={setInputText} />
         </section>

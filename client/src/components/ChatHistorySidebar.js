@@ -4,23 +4,21 @@ import ToggleButtons from './ToggleButtons';
 import ChatHistoryTabs from './ChatHistoryTabs';
 import AddCommentSharpIcon from '@mui/icons-material/AddCommentSharp';
 import axios from 'axios';
-export default function ChatHistorySidebar({ openSidebar, setOpenSidebar, initialConvos }) {
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleSidebar } from '../redux/actions/uiActions';
+export default function ChatHistorySidebar({ initialConvos }) {
 
     const [convos, setConvos] = useState(initialConvos || []);
     const [value, setValue] = useState(0);
+
+    const dispatch = useDispatch();
+    const isSidebarOpen = useSelector((state) => state.uiState.isSidebarOpen);
 
     useEffect(() => {
         initialConvos.sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
         setValue(0);
         setConvos(initialConvos || []);
     }, [initialConvos]);
-
-    function handleClick() {
-        if (!openSidebar)
-            setOpenSidebar(true);
-        else
-            setOpenSidebar(false);
-    }
 
     const createConversation = async (userId) => {
 
@@ -54,8 +52,8 @@ export default function ChatHistorySidebar({ openSidebar, setOpenSidebar, initia
 
     return (
         <section id="chat-history-sidebar">
-            <MessageSharpIcon onClick={handleClick} className={`${openSidebar ? 'text-blue-500' : null} hover:text-blue-500 cursor-pointer`} sx={{ fontSize: { xs: 25, sm: 30, md: 40 } }} />
-            {openSidebar ?
+            <MessageSharpIcon onClick={() => dispatch(toggleSidebar())} className={`${isSidebarOpen ? 'text-blue-500' : null} hover:text-blue-500 cursor-pointer`} sx={{ fontSize: { xs: 25, sm: 30, md: 40 } }} />
+            {isSidebarOpen ?
                 <div id="sidebar" className="fixed bg-gray-100 overflow-y-auto left-0 h-full border border-gray-200 w-1/3 rounded-xl">
                     <div className="flex justify-between items-center">
                         <div className="text-center ml-3">

@@ -4,7 +4,6 @@ import NavBar from '../components/NavBar'
 import axios from 'axios';
 
 export default function Chat() {
-    const [openSidebar, setOpenSidebar] = useState(false);
     const [initialConvos, setInitialConvos] = useState([]);
 
     const userId = 3;
@@ -27,8 +26,8 @@ export default function Chat() {
 
     return (
         <div>
-            <NavBar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} initialConvos={initialConvos} />
-            <ChatInterface openSidebar={openSidebar} />
+            <NavBar initialConvos={initialConvos} />
+            <ChatInterface />
         </div>
     );
 }
