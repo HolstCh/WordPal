@@ -3,52 +3,38 @@ import MessageSharpIcon from '@mui/icons-material/MessageSharp';
 import ToggleButtons from './ToggleButtons';
 import ChatHistoryTabs from './ChatHistoryTabs';
 import AddCommentSharpIcon from '@mui/icons-material/AddCommentSharp';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSidebar } from '../redux/actions/uiActions';
-export default function ChatHistorySidebar({ initialConvos }) {
+import { fetchConversations, addConversation } from '../redux/actions/conversationActions';
+export default function ChatHistorySidebar() {
 
-    const [convos, setConvos] = useState(initialConvos || []);
     const [value, setValue] = useState(0);
+    const [sortedConvos, setSortedConvos] = useState([]);
+    const [convoIdList, setConvoIdList] = useState([]);
 
     const dispatch = useDispatch();
     const isSidebarOpen = useSelector((state) => state.uiState.isSidebarOpen);
+    const conversations = useSelector((state) => state.conversationState.conversations);
 
     useEffect(() => {
-        initialConvos.sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+        dispatch(fetchConversations(3));
+    }, [dispatch]);
+
+    useEffect(() => {
+        const sorted = [...conversations].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+        setSortedConvos(sorted);
+        setConvoIdList(sorted.map(convo => convo.id));
         setValue(0);
-        setConvos(initialConvos || []);
-    }, [initialConvos]);
-
-    const createConversation = async (userId) => {
-
-        try {
-            const response = await axios.post('/api/conversation', {
-                userId: userId,  // Replace with the actual user ID
-                startedAt: new Date().toISOString(),
-                endedAt: new Date().toISOString(),
-                messages: [],
-            });
-            console.log(response);
-            return response;
-        } catch (error) {
-            console.error('Error creating conversation:', error);
-        }
-    };
+        console.log("hey", sorted);
+    }, [conversations]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
     const handleAddConvo = async () => {
-        const newConvo = await createConversation(3);
-        console.log("here", newConvo);
-        if (newConvo) {
-            setConvos(prevConvos => [...prevConvos, newConvo.data]);
-            convos.sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
-            setValue(0);
-        }
-    }
+        await dispatch(addConversation(3));
+    };
 
     return (
         <section id="chat-history-sidebar">
@@ -61,7 +47,7 @@ export default function ChatHistorySidebar({ initialConvos }) {
                         </div>
                         <AddCommentSharpIcon onClick={handleAddConvo} className={`hover:text-blue-500 cursor-pointer mr-3 mt-3`} sx={{ fontSize: { xs: 25, sm: 30, md: 40 } }} />
                     </div>
-                    <ChatHistoryTabs convos={convos} value={value} handleChange={handleChange} />
+                    <ChatHistoryTabs convos={sortedConvos} value={value} handleChange={handleChange} convoIdList={convoIdList} />
                 </div>
             : null
             }

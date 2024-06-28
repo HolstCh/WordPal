@@ -2,7 +2,7 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-export default function ChatHistoryTabs({ convos, value, handleChange }) {
+export default function ChatHistoryTabs({ convos, value, handleChange, convoIdList }) {
    
     return (
         <div className="flex flex-col items-start ml-3 w-full bg-gray-100 overflow-hidden py-3">
@@ -14,8 +14,8 @@ export default function ChatHistoryTabs({ convos, value, handleChange }) {
                 orientation="vertical"
                 className="flex-1 border"
             >
-            {convos.map((item) => (
-                <Tab label={item.id} key={item.id} className={`${value === item.id ? 'bg-blue-100' : null}`}></Tab>
+            {convos.map((item, index) => (
+                <Tab label={convoIdList[index]} key={convoIdList[index]} className={`${value === index ? 'bg-blue-100' : null}`}></Tab>
             ))}
             </Tabs>
         </div>

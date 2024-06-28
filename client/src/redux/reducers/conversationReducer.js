@@ -1,4 +1,4 @@
-﻿import { FETCH_CONVERSATIONS, FETCH_CONVERSATION_MESSAGES, ADD_MESSAGE } from '../actions/actionTypes';
+﻿import { FETCH_CONVERSATIONS, ADD_CONVERSATION, FETCH_CONVERSATION_MESSAGES, ADD_MESSAGE } from '../actions/actionTypes';
 
 const initialState = {
     conversations: [],
@@ -11,6 +11,11 @@ const conversationReducer = (state = initialState, action) => {
             return {
                 ...state,
                 conversations: action.payload,
+            };
+        case ADD_CONVERSATION:
+            return {
+                ...state,
+                conversations: [...state.conversations, action.payload],
             };
         case FETCH_CONVERSATION_MESSAGES:
             return {
