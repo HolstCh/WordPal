@@ -9,7 +9,6 @@ import { fetchConversations, addConversation } from '../redux/actions/conversati
 export default function ChatHistorySidebar() {
 
     const [value, setValue] = useState(0);
-    const [sortedConvos, setSortedConvos] = useState([]);
     const [convoIdList, setConvoIdList] = useState([]);
 
     const dispatch = useDispatch();
@@ -25,12 +24,11 @@ export default function ChatHistorySidebar() {
         if (conversations.length > 0)
         {
             const sorted = [...conversations].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
-            setSortedConvos(sorted);
             const convoIds = sorted.map(convo => convo.id);
             setConvoIdList(convoIds);
             setValue(0);
-            console.log("hey", sorted);
             dispatch(selectConvo(convoIds[0]));
+            console.log("initial", conversations);
         }
     }, [conversations, dispatch]);
 
@@ -54,7 +52,7 @@ export default function ChatHistorySidebar() {
                         </div>
                         <AddCommentSharpIcon onClick={handleAddConvo} className={`hover:text-blue-500 cursor-pointer mr-3 mt-3`} sx={{ fontSize: { xs: 25, sm: 30, md: 40 } }} />
                     </div>
-                    <ChatHistoryTabs convos={sortedConvos} value={value} handleChange={handleChange} convoIdList={convoIdList} />
+                    <ChatHistoryTabs key={convoIdList.join('-')} value={value} handleChange={handleChange} convoIdList={convoIdList} />
                 </div>
             : null
             }
