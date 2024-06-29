@@ -1,8 +1,9 @@
 ﻿import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CurrentConversation from './CurrentConversation'
 import ChatInput from './ChatInput'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addMessage, fetchConversationMessages } from '../redux/actions/conversationActions';
 
 export default function ChatInterface() {
 
@@ -10,6 +11,21 @@ export default function ChatInterface() {
     const [chatHistory, setChatHistory] = useState([]);
 
     const isSidebarOpen = useSelector((state) => state.uiState.isSidebarOpen);
+    const selectedConvoId = useSelector((state) => state.uiState.selectedConvoId);
+    const messages = useSelector((state) => state.conversationState.messages[selectedConvoId]);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedConvoId) {
+            dispatch(fetchConversationMessages(selectedConvoId));
+        }
+    }, [selectedConvoId, dispatch]);
+
+    useEffect(() => {
+        if (messages) {
+            setChatHistory(messages);
+        }
+    }, [messages]);
 
     const generateText = async (inputText) => {
         try {
@@ -30,16 +46,9 @@ export default function ChatInterface() {
         }
     };
 
-    const addMessageToConvo = async () => {
-        try {
-            const response = await axios.get(`https://localhost:7204/api/user/$`);
-            return response;
-        }
-        catch (error) {
-            console.error("Error creating user", error);
-        }
-
-    }
+    const addMessageToConvo = async (message) => {
+        dispatch(addMessage(selectedConvoId, message));
+    };
 
     const handleButtonClick = async () => {
 
@@ -49,20 +58,38 @@ export default function ChatInterface() {
             return;
         }
 
-        const userChatMessage = { type: 'user', text: currentInputText };
-        setChatHistory(chatHistory => [...chatHistory, userChatMessage]);
+        const userChatMessage = {
+            conversationId: selectedConvoId,
+            sender: "User",
+            content: currentInputText,
+            sentAt: new Date().toISOString().slice(0, -1),
+        };
 
+        setChatHistory(chatHistory => [...chatHistory, userChatMessage]);
+        await addMessageToConvo(userChatMessage);
+
+        // generate response from hugging face API
         const result = await generateText(currentInputText);
         let generatedResponse = result.generatedText;
         console.log(generatedResponse);
 
+        // parse through response for generated text
         const regex = /[\s\S]*assistant\s*/i;
         generatedResponse = generatedResponse.replace(regex, '');
         generatedResponse = generatedResponse.replace(/\|{2,}/g, '');
         console.log(currentInputText);
         console.log(generatedResponse);
-        const modelChatMessage = { type: 'model', text: generatedResponse };
+
+        // create object for chat message by model
+        const modelChatMessage = {
+            conversationId: selectedConvoId,
+            sender: "Model",
+            content: generatedResponse,
+            sentAt: new Date().toISOString().slice(0, -1),
+        };
         setChatHistory(chatHistory => [...chatHistory, modelChatMessage]);
+        await addMessageToConvo(modelChatMessage);
+
         setInputText('');
         const userData = await getUser(3);
         console.log(userData);

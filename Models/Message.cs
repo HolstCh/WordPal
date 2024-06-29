@@ -9,7 +9,7 @@
         public DateTime SentAt { get; set; }
 
         // navigation property to represent the many-to-one relationship with Conversation
-        public Conversation Conversation { get; set; }
+        //public Conversation Conversation { get; set; }
     }
 
 }

@@ -12,13 +12,13 @@ const ChatMessage = ({ message }) => {
     const typingSpeed = 15; // Adjust this value to change the typing speed
 
     useEffect(() => {
-        if (visibleLength < message.text.length) {
+        if (visibleLength < message.content.length) {
             const timer = setTimeout(() => {
                 setVisibleLength(visibleLength + 1);
             }, typingSpeed);
             return () => clearTimeout(timer);
         }
-    }, [visibleLength, message.text.length, typingSpeed]);
+    }, [visibleLength, message.content.length, typingSpeed]);
 
     function handleClick() {
         if (!pinnedMessage)
@@ -28,19 +28,19 @@ const ChatMessage = ({ message }) => {
     }
 
     return (
-        <div className={`mb-4 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
-            <p className="text-xl"><b>{message.type === 'user' ? 'You' : 'Model'}</b></p>
-            <div className={`break-words ${message.type === 'user' ? 'bg-gray-100 rounded-2xl inline-block p-2' : 'bg-blue-100 rounded-2xl inline-block p-2'}`}>
-                {message.type === 'user' ?
+        <div className={`mb-4 ${message.sender === 'User' ? 'text-right' : 'text-left'}`}>
+            <p className="text-xl"><b>{message.sender === 'User' ? 'You' : 'Model'}</b></p>
+            <div className={`break-words ${message.sender === 'User' ? 'bg-gray-100 rounded-2xl inline-block p-2' : 'bg-blue-100 rounded-2xl inline-block p-2'}`}>
+                {message.sender === 'User' ?
                     <ReactMarkdown
-                        children={message.text}
+                        children={message.content}
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeRaw, rehypeSanitize]}
                     />
                     :
                     <>
                           <ReactMarkdown
-                            children={message.text.substring(0, visibleLength)}
+                            children={message.content.substring(0, visibleLength)}
                             remarkPlugins={[remarkGfm]}
                             rehypePlugins={[rehypeRaw, rehypeSanitize]}
                         />

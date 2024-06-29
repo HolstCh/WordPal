@@ -4,7 +4,7 @@ import ToggleButtons from './ToggleButtons';
 import ChatHistoryTabs from './ChatHistoryTabs';
 import AddCommentSharpIcon from '@mui/icons-material/AddCommentSharp';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleSidebar } from '../redux/actions/uiActions';
+import { toggleSidebar, selectConvo } from '../redux/actions/uiActions';
 import { fetchConversations, addConversation } from '../redux/actions/conversationActions';
 export default function ChatHistorySidebar() {
 
@@ -20,16 +20,23 @@ export default function ChatHistorySidebar() {
         dispatch(fetchConversations(3));
     }, [dispatch]);
 
-    useEffect(() => {
-        const sorted = [...conversations].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
-        setSortedConvos(sorted);
-        setConvoIdList(sorted.map(convo => convo.id));
-        setValue(0);
-        console.log("hey", sorted);
-    }, [conversations]);
+    useEffect(() =>
+    {
+        if (conversations.length > 0)
+        {
+            const sorted = [...conversations].sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+            setSortedConvos(sorted);
+            const convoIds = sorted.map(convo => convo.id);
+            setConvoIdList(convoIds);
+            setValue(0);
+            console.log("hey", sorted);
+            dispatch(selectConvo(convoIds[0]));
+        }
+    }, [conversations, dispatch]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        dispatch(selectConvo(convoIdList[newValue]));
     };
 
     const handleAddConvo = async () => {

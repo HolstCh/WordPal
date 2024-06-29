@@ -24,7 +24,7 @@ namespace WordPal.Services
 
         public async Task<Message> GetMessageById(int id)
         {
-            return await _context.Messages.Include(m => m.Conversation).FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<Message> CreateMessage(Message message)

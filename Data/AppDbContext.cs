@@ -30,13 +30,6 @@ namespace WordPal.Data
 
             // define relationships and configure each model
 
-            // Conversation and Messages relationship
-            modelBuilder.Entity<Conversation>()
-                .HasMany(c => c.Messages)
-                .WithOne(m => m.Conversation)
-                .HasForeignKey(m => m.ConversationId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             // MessagePair configuration
             modelBuilder.Entity<MessagePair>(entity =>
             {

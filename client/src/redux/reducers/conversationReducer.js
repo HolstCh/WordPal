@@ -26,12 +26,18 @@ const conversationReducer = (state = initialState, action) => {
                 },
             };
         case ADD_MESSAGE:
+            const conversationId = action.payload.conversationId;
+            const currentMessages = state.messages[conversationId] || [];
+            console.log('current state:', state);
+            console.log('conversationId:', conversationId);
+            console.log('currentMessages:', currentMessages);
+            console.log('action payload:', action.payload);
             return {
                 ...state,
                 messages: {
                     ...state.messages,
-                    [action.payload.conversationId]: [
-                        ...(state.messages[action.payload.conversationId] || []),
+                    [conversationId]: [
+                        ...currentMessages,
                         action.payload.message,
                     ],
                 },

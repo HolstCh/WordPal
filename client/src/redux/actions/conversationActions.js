@@ -1,5 +1,5 @@
 ﻿import axios from 'axios';
-import { FETCH_CONVERSATIONS, ADD_CONVERSATION, FETCH_CONVERSATION_MESSAGES, ADD_MESSAGE } from './actionTypes';
+import {FETCH_CONVERSATIONS, ADD_CONVERSATION, FETCH_CONVERSATION_MESSAGES, ADD_MESSAGE } from './actionTypes';
 
 export const fetchConversations = (userId) => {
     return async (dispatch) => {
@@ -41,10 +41,10 @@ export const addConversation = (userId) => {
 export const fetchConversationMessages = (conversationId) => {
     return async (dispatch) => {
         try {
-            const response = await axios.get(`/api/conversations/${conversationId}/messages`);
+            const response = await axios.get(`/api/conversation/${conversationId}`);
             dispatch({
                 type: FETCH_CONVERSATION_MESSAGES,
-                payload: { conversationId, messages: response.data },
+                payload: { conversationId, messages: response.data.messages},
             });
         } catch (error) {
             console.error('Failed to fetch messages:', error);
@@ -54,13 +54,16 @@ export const fetchConversationMessages = (conversationId) => {
 
 export const addMessage = (conversationId, message) => {
     return async (dispatch) => {
-        try {
-            const response = await axios.post(`/api/conversations/${conversationId}/messages`, message);
+        try
+        {
+            const response = await axios.post(`/api/message`, message);
             dispatch({
                 type: ADD_MESSAGE,
                 payload: { conversationId, message: response.data },
             });
-        } catch (error) {
+        }
+        catch (error)
+        {
             console.error('Failed to add message:', error);
         }
     };
