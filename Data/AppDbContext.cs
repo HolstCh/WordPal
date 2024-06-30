@@ -13,7 +13,6 @@ namespace WordPal.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<MessagePair> MessagePairs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,20 +28,6 @@ namespace WordPal.Data
             });
 
             // define relationships and configure each model
-
-            // MessagePair configuration
-            modelBuilder.Entity<MessagePair>(entity =>
-            {
-                entity.HasOne(mp => mp.UserMessage)
-                    .WithMany()
-                    .HasForeignKey(mp => mp.UserMessageId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(mp => mp.BotMessage)
-                    .WithMany()
-                    .HasForeignKey(mp => mp.BotMessageId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
         }
     }
 }

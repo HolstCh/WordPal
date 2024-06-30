@@ -4,12 +4,16 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import PushPinSharpIcon from '@mui/icons-material/PushPinSharp';
+import { useSelector, useDispatch } from 'react-redux';
+import { pinMessage, unpinMessage } from '../redux/actions/conversationActions';
 
 const ChatMessage = ({ message }) => {
 
     const [pinnedMessage, setPinnedMessage] = useState(false);
     const [visibleLength, setVisibleLength] = useState(0);
-    const typingSpeed = 15; // Adjust this value to change the typing speed
+
+    const typingSpeed = 15; // adjust this value to change the typing speed
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (visibleLength < message.content.length) {
@@ -20,11 +24,18 @@ const ChatMessage = ({ message }) => {
         }
     }, [visibleLength, message.content.length, typingSpeed]);
 
-    function handleClick() {
+    function handleClick(convoId, msgId) {
+        console.log(convoId, msgId);
         if (!pinnedMessage)
+        {
             setPinnedMessage(true);
+            dispatch(pinMessage(convoId, msgId));
+        }
         else
+        {
             setPinnedMessage(false);
+            dispatch(unpinMessage(convoId, msgId));
+        }
     }
 
     return (
@@ -45,7 +56,7 @@ const ChatMessage = ({ message }) => {
                             rehypePlugins={[rehypeRaw, rehypeSanitize]}
                         />
                         <div className="p-2 bg-blue-100 rounded-2xl text-right">
-                            <PushPinSharpIcon className={`hover:text-blue-500 cursor-pointer ${pinnedMessage ? 'text-blue-500' : null}`} onClick={handleClick} />
+                            <PushPinSharpIcon className={`hover:text-blue-500 cursor-pointer ${pinnedMessage ? 'text-blue-500' : null}`} onClick={() => handleClick(message.conversationId, message.id)} />
                         </div>
                     </>
                 }

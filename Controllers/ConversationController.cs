@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using WordPal.Models;
 using WordPal.Services;
@@ -46,5 +47,38 @@ namespace WordPal.Controllers
 
             return Ok(conversations);
         }
+
+        [HttpPut("/{conversationId}/pin/{messageId}")]
+        public async Task<IActionResult> PinMessage(int conversationId, int messageId)
+        {
+            System.Diagnostics.Debug.WriteLine($"Received request to pin message. ConversationId: {conversationId}, MessageId: {messageId}");
+            var message = await _conversationService.PinMessage(conversationId, messageId);
+            System.Diagnostics.Debug.WriteLine($"Message after pin attempt: {message}");
+            System.Diagnostics.Debug.WriteLine(message);
+            if (message == null)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+        [HttpPut("/{conversationId}/unpin/{messageId}")]
+        public async Task<IActionResult> UnpinMessage(int conversationId, int messageId)
+        {
+            var message = await _conversationService.UnpinMessage(conversationId, messageId);
+            if (message == null)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+        [HttpGet("{conversationId}/pinned")]
+        public async Task<IActionResult> GetPinnedMessages(int conversationId)
+        {
+            var pinnedMessages = await _conversationService.GetPinnedMessages(conversationId);
+            return Ok(pinnedMessages);
+        }
+
     }
 }

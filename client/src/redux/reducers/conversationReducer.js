@@ -1,4 +1,4 @@
-﻿import { FETCH_CONVERSATIONS, ADD_CONVERSATION, FETCH_CONVERSATION_MESSAGES, ADD_MESSAGE } from '../actions/actionTypes';
+﻿import { FETCH_CONVERSATIONS, ADD_CONVERSATION, FETCH_CONVERSATION_MESSAGES, ADD_MESSAGE, PIN_MESSAGE, UNPIN_MESSAGE, FETCH_PINNED_MESSAGES } from '../actions/actionTypes';
 
 const initialState = {
     conversations: [],
@@ -40,6 +40,34 @@ const conversationReducer = (state = initialState, action) => {
                         ...currentMessages,
                         action.payload.message,
                     ],
+                },
+            };
+        case PIN_MESSAGE:
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    [action.payload.conversationId]: state.messages[action.payload.conversationId].map(message =>
+                        message.id === action.payload.messageId ? { ...message, isPinned: true } : message
+                    ),
+                },
+            };
+        case UNPIN_MESSAGE:
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    [action.payload.conversationId]: state.messages[action.payload.conversationId].map(message =>
+                        message.id === action.payload.messageId ? { ...message, isPinned: false } : message
+                    ),
+                },
+            };
+        case FETCH_PINNED_MESSAGES:
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    [action.payload.conversationId]: action.payload.messages,
                 },
             };
         default:
