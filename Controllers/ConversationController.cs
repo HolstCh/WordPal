@@ -6,17 +6,24 @@ using WordPal.Services;
 
 namespace WordPal.Controllers
 {
+    // Defines the API controller for Conversation model operations.
     [Route("api/[controller]")]
     [ApiController]
     public class ConversationController : ControllerBase
     {
+        // The service for interacting with the Conversation database.
         private readonly IConversationDbService _conversationService;
 
+        // Constructor for the ConversationController class.
+        // Parameters: IConversationDbService conversationService - the service for interacting with the Conversation database
         public ConversationController(IConversationDbService conversationService)
         {
             _conversationService = conversationService;
         }
 
+        // API endpoint for retrieving a conversation by its ID.
+        // Parameters: int id - the ID of the conversation to retrieve
+        // Returns: Task<ActionResult<Conversation>> - the result of the retrieval operation
         [HttpGet("{id}")]
         public async Task<ActionResult<Conversation>> GetConversation(int id)
         {
@@ -29,6 +36,9 @@ namespace WordPal.Controllers
             return Ok(conversation);
         }
 
+        // API endpoint for creating a new conversation.
+        // Parameters: Conversation conversation - the conversation to create
+        // Returns: Task<ActionResult<Conversation>> - the result of the create operation
         [HttpPost]
         public async Task<ActionResult<Conversation>> CreateConversation(Conversation conversation)
         {
@@ -36,6 +46,9 @@ namespace WordPal.Controllers
             return CreatedAtAction(nameof(GetConversation), new { id = createdConversation.Id }, createdConversation);
         }
 
+        // API endpoint for retrieving all conversations for a specific user.
+        // Parameters: int userId - the ID of the user whose conversations to retrieve
+        // Returns: Task<ActionResult<IEnumerable<Conversation>>> - the list of Conversation objects for the given user
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<Conversation>>> GetConversationsByUserId(int userId)
         {
@@ -48,13 +61,13 @@ namespace WordPal.Controllers
             return Ok(conversations);
         }
 
+        // API endpoint for pinning a message in a conversation.
+        // Parameters: int conversationId - the ID of the conversation, int messageId - the ID of the message to pin
+        // Returns: Task<IActionResult> - the result of the pin operation
         [HttpPut("/{conversationId}/pin/{messageId}")]
         public async Task<IActionResult> PinMessage(int conversationId, int messageId)
         {
-            System.Diagnostics.Debug.WriteLine($"Received request to pin message. ConversationId: {conversationId}, MessageId: {messageId}");
             var message = await _conversationService.PinMessage(conversationId, messageId);
-            System.Diagnostics.Debug.WriteLine($"Message after pin attempt: {message}");
-            System.Diagnostics.Debug.WriteLine(message);
             if (message == null)
             {
                 return NotFound();
@@ -62,6 +75,9 @@ namespace WordPal.Controllers
             return Ok();
         }
 
+        // API endpoint for unpinning a message in a conversation.
+        // Parameters: int conversationId - the ID of the conversation, int messageId - the ID of the message to unpin
+        // Returns: Task<IActionResult> - the result of the unpin operation
         [HttpPut("/{conversationId}/unpin/{messageId}")]
         public async Task<IActionResult> UnpinMessage(int conversationId, int messageId)
         {
@@ -73,12 +89,14 @@ namespace WordPal.Controllers
             return Ok();
         }
 
+        // API endpoint for retrieving all pinned messages in a conversation.
+        // Parameters: int conversationId - the ID of the conversation
+        // Returns: Task<IActionResult> - the list of pinned Message objects in the conversation
         [HttpGet("{conversationId}/pinned")]
         public async Task<IActionResult> GetPinnedMessages(int conversationId)
         {
             var pinnedMessages = await _conversationService.GetPinnedMessages(conversationId);
             return Ok(pinnedMessages);
         }
-
     }
 }

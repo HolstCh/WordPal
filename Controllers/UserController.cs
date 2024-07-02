@@ -6,23 +6,28 @@ using WordPal.Services;
 
 namespace WordPal.Controllers
 {
+    // Defines the API controller for User model operations.
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
+        // The service for interacting with the User model in Entity Framework/SQL Server.
         private readonly IUserDbService _userService;
 
+        // Constructor for the UserController class.
+        // Parameters: IUserDbService userService - the service for interacting with the User database
         public UserController(IUserDbService userService)
         {
             _userService = userService;
         }
 
+        // API endpoint for creating a new user.
+        // Parameters: [FromBody] User user - the user to create
+        // Returns: Task<IActionResult> - the result of the create operation
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
-            Console.WriteLine(user.Username, user.Password);
-            Console.WriteLine("hello");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -38,6 +43,9 @@ namespace WordPal.Controllers
             }
         }
 
+        // API endpoint for logging in a user.
+        // Parameters: [FromBody] User user - the user to log in
+        // Returns: Task<IActionResult> - the result of the login operation
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] User user)
         {
@@ -49,6 +57,9 @@ namespace WordPal.Controllers
             return StatusCode(500);
         }
 
+        // API endpoint for retrieving a user by their ID.
+        // Parameters: int userId - the ID of the user to retrieve
+        // Returns: Task<IActionResult> - the result of the retrieval operation
         [HttpGet]
         [Route("{userId}")]
         public async Task<IActionResult> GetUserById(int userId)
@@ -68,5 +79,4 @@ namespace WordPal.Controllers
             }
         }
     }
-
 }
