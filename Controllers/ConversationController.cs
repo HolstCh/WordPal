@@ -64,7 +64,7 @@ namespace WordPal.Controllers
         // API endpoint for pinning a message in a conversation.
         // Parameters: int conversationId - the ID of the conversation, int messageId - the ID of the message to pin
         // Returns: Task<IActionResult> - the result of the pin operation
-        [HttpPut("/{conversationId}/pin/{messageId}")]
+        [HttpPut("{conversationId}/pin/{messageId}")]
         public async Task<IActionResult> PinMessage(int conversationId, int messageId)
         {
             var message = await _conversationService.PinMessage(conversationId, messageId);
@@ -78,7 +78,7 @@ namespace WordPal.Controllers
         // API endpoint for unpinning a message in a conversation.
         // Parameters: int conversationId - the ID of the conversation, int messageId - the ID of the message to unpin
         // Returns: Task<IActionResult> - the result of the unpin operation
-        [HttpPut("/{conversationId}/unpin/{messageId}")]
+        [HttpPut("{conversationId}/unpin/{messageId}")]
         public async Task<IActionResult> UnpinMessage(int conversationId, int messageId)
         {
             var message = await _conversationService.UnpinMessage(conversationId, messageId);
