@@ -7,59 +7,75 @@ import PushPinSharpIcon from '@mui/icons-material/PushPinSharp';
 import { useSelector, useDispatch } from 'react-redux';
 import { pinMessage, unpinMessage } from '../redux/actions/conversationActions';
 
-const ChatMessage = ({ message }) => {
+const ChatMessage = ({ message, isNewestMessage }) => {
 
-    const [pinnedMessage, setPinnedMessage] = useState(false);
     const [visibleLength, setVisibleLength] = useState(0);
 
-    const typingSpeed = 15; // adjust this value to change the typing speed
+    const typingSpeed = 15;
     const dispatch = useDispatch();
 
+    console.log("newestMsg: ", isNewestMessage);
+
     useEffect(() => {
-        if (visibleLength < message.content.length) {
+        if (isNewestMessage && visibleLength < message.content.length) {
             const timer = setTimeout(() => {
                 setVisibleLength(visibleLength + 1);
             }, typingSpeed);
             return () => clearTimeout(timer);
         }
-    }, [visibleLength, message.content.length, typingSpeed]);
+    }, [visibleLength, message.content.length, typingSpeed, isNewestMessage]);
 
-    function handleClick(convoId, msgId) {
+    useEffect(() => {
+        if (isNewestMessage) {
+            setVisibleLength(0);
+        }
+    }, [isNewestMessage]);
+
+    function handleClick(convoId, msgId, isPinnedMsg) {
         console.log(convoId, msgId);
-        if (!pinnedMessage)
+        if (!isPinnedMsg)
         {
-            setPinnedMessage(true);
             dispatch(pinMessage(convoId, msgId));
         }
         else
         {
-            setPinnedMessage(false);
             dispatch(unpinMessage(convoId, msgId));
         }
     }
 
     return (
-        <div className={`mb-4 ${message.sender === 'User' ? 'text-right' : 'text-left'}`}>
+        <div id={`message-${message.id}`} className={`mb-4 ${message.sender === 'User' ? 'text-right' : 'text-left'}`}>
             <p className="text-xl"><b>{message.sender === 'User' ? 'You' : 'Model'}</b></p>
             <div className={`break-words ${message.sender === 'User' ? 'bg-gray-100 rounded-2xl inline-block p-2' : 'bg-blue-100 rounded-2xl inline-block p-2'}`}>
-                {message.sender === 'User' ?
+                {message.sender === 'User' ? (
                     <ReactMarkdown
                         children={message.content}
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeRaw, rehypeSanitize]}
                     />
-                    :
+                ) : (
                     <>
-                          <ReactMarkdown
-                            children={message.content.substring(0, visibleLength)}
-                            remarkPlugins={[remarkGfm]}
-                            rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                        />
+                        {isNewestMessage ? (
+                            <ReactMarkdown
+                                children={message.content.substring(0, visibleLength)}
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                            />
+                        ) : (
+                            <ReactMarkdown
+                                children={message.content}
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                            />
+                        )}
                         <div className="p-2 bg-blue-100 rounded-2xl text-right">
-                            <PushPinSharpIcon className={`hover:text-blue-500 cursor-pointer ${pinnedMessage ? 'text-blue-500' : null}`} onClick={() => handleClick(message.conversationId, message.id)} />
+                            <PushPinSharpIcon
+                                className={`hover:text-blue-500 cursor-pointer ${message.isPinned ? 'text-blue-500' : null}`}
+                                onClick={() => handleClick(message.conversationId, message.id, message.isPinned)}
+                            />
                         </div>
                     </>
-                }
+                )}
             </div>
         </div>
     );

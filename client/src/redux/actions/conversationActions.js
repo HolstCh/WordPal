@@ -100,7 +100,7 @@ export const unpinMessage = (conversationId, messageId) => {
 };
 
 
-export const fetchPinnedMessages = (conversationId) => async (dispatch) => {
+export const fetchPinnedMessages = (conversationId) => {
     return async (dispatch) => {
         try {
             const response = await axios.get(`/conversations/${conversationId}/pinned`);

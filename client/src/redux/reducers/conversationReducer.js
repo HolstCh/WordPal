@@ -63,6 +63,7 @@ const conversationReducer = (state = initialState, action) => {
                 },
             };
         case FETCH_PINNED_MESSAGES:
+            console.log("current state: ", state);
             return {
                 ...state,
                 messages: {
