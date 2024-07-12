@@ -6,13 +6,16 @@ import rehypeSanitize from 'rehype-sanitize';
 import PushPinSharpIcon from '@mui/icons-material/PushPinSharp';
 import { useSelector, useDispatch } from 'react-redux';
 import { pinMessage, unpinMessage } from '../redux/actions/conversationActions';
+import { currentConvo } from '../redux/actions/uiActions';
 
-const ChatMessage = ({ message, isNewestMessage }) => {
+const ChatMessage = React.memo(({ message, isNewestMessage }) => {
 
     const [visibleLength, setVisibleLength] = useState(0);
 
-    const typingSpeed = 15;
+    const typingSpeed = 2;
     const dispatch = useDispatch();
+    const convoIdWithUserSubmit = useSelector(state => state.uiState.currentConvoId);
+    const selectedConvoId = useSelector(state => state.uiState.selectedConvoId);
 
     console.log("newestMsg: ", isNewestMessage);
 
@@ -23,7 +26,9 @@ const ChatMessage = ({ message, isNewestMessage }) => {
             }, typingSpeed);
             return () => clearTimeout(timer);
         }
-    }, [visibleLength, message.content.length, typingSpeed, isNewestMessage]);
+        else
+            dispatch(currentConvo(-1));
+    }, [visibleLength, message.content.length, typingSpeed, dispatch, isNewestMessage]);
 
     useEffect(() => {
         if (isNewestMessage) {
@@ -33,12 +38,10 @@ const ChatMessage = ({ message, isNewestMessage }) => {
 
     function handleClick(convoId, msgId, isPinnedMsg) {
         console.log(convoId, msgId);
-        if (!isPinnedMsg)
-        {
+        if (!isPinnedMsg) {
             dispatch(pinMessage(convoId, msgId));
         }
-        else
-        {
+        else {
             dispatch(unpinMessage(convoId, msgId));
         }
     }
@@ -55,7 +58,7 @@ const ChatMessage = ({ message, isNewestMessage }) => {
                     />
                 ) : (
                     <>
-                        {isNewestMessage ? (
+                        {isNewestMessage && (convoIdWithUserSubmit === selectedConvoId) ? (
                             <ReactMarkdown
                                 children={message.content.substring(0, visibleLength)}
                                 remarkPlugins={[remarkGfm]}
@@ -79,6 +82,8 @@ const ChatMessage = ({ message, isNewestMessage }) => {
             </div>
         </div>
     );
-};
+}, (prevProps, nextProps) => {
+    return prevProps.message === nextProps.message && prevProps.isNewestMessage === nextProps.isNewestMessage;
+});
 
 export default ChatMessage;

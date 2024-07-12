@@ -99,7 +99,6 @@ export const unpinMessage = (conversationId, messageId) => {
     };
 };
 
-
 export const fetchPinnedMessages = (conversationId) => {
     return async (dispatch) => {
         try {

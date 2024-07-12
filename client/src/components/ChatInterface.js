@@ -4,12 +4,12 @@ import CurrentConversation from './CurrentConversation'
 import ChatInput from './ChatInput'
 import { useSelector, useDispatch } from 'react-redux';
 import { addMessage, fetchConversationMessages } from '../redux/actions/conversationActions';
+import { currentConvo, toggleTyping } from '../redux/actions/uiActions';
 
 export default function ChatInterface() {
 
     const [inputText, setInputText] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
-    const [typingTimeout, setTypingTimeout] = useState(null);
 
     const isSidebarOpen = useSelector((state) => state.uiState.isSidebarOpen);
     const selectedConvoId = useSelector((state) => state.uiState.selectedConvoId);
@@ -49,13 +49,6 @@ export default function ChatInterface() {
 
     const addMessageToConvo = async (message) => {
         dispatch(addMessage(selectedConvoId, message));
-    };
-
-    const debounceTypingState = (value, delay) => {
-        setModelIsTyping(value);
-        clearTimeout(typingTimeout);
-        const timeout = setTimeout(() => setModelIsTyping(false), delay);
-        setTypingTimeout(timeout);
     };
 
     const handleButtonClick = async () => {
@@ -102,6 +95,7 @@ export default function ChatInterface() {
         const userData = await getUser(3);
         console.log(userData);
 
+        dispatch(currentConvo(selectedConvoId));
     }
 
     return (
