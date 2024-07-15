@@ -5,15 +5,14 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import PushPinSharpIcon from '@mui/icons-material/PushPinSharp';
 import { useSelector, useDispatch } from 'react-redux';
-import { pinMessage, unpinMessage } from '../redux/actions/conversationActions';
 import { currentConvo } from '../redux/actions/uiActions';
 
-const ChatMessage = React.memo(({ message, isNewestMessage }) => {
+const ChatMessage = React.memo(({ message, isNewestMessage, handlePinMessage }) => {
 
     const [visibleLength, setVisibleLength] = useState(0);
 
-    const typingSpeed = 2;
     const dispatch = useDispatch();
+    const typingSpeed = 2;
     const convoIdWithUserSubmit = useSelector(state => state.uiState.currentConvoId);
     const selectedConvoId = useSelector(state => state.uiState.selectedConvoId);
 
@@ -35,16 +34,6 @@ const ChatMessage = React.memo(({ message, isNewestMessage }) => {
             setVisibleLength(0);
         }
     }, [isNewestMessage]);
-
-    function handleClick(convoId, msgId, isPinnedMsg) {
-        console.log(convoId, msgId);
-        if (!isPinnedMsg) {
-            dispatch(pinMessage(convoId, msgId));
-        }
-        else {
-            dispatch(unpinMessage(convoId, msgId));
-        }
-    }
 
     return (
         <div id={`message-${message.id}`} className={`mb-4 ${message.sender === 'User' ? 'text-right' : 'text-left'}`}>
@@ -74,7 +63,7 @@ const ChatMessage = React.memo(({ message, isNewestMessage }) => {
                         <div className="p-2 bg-blue-100 rounded-2xl text-right">
                             <PushPinSharpIcon
                                 className={`hover:text-blue-500 cursor-pointer ${message.isPinned ? 'text-blue-500' : null}`}
-                                onClick={() => handleClick(message.conversationId, message.id, message.isPinned)}
+                                onClick={() => handlePinMessage(message.conversationId, message.id, message.isPinned)}
                             />
                         </div>
                     </>
