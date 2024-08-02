@@ -8,15 +8,12 @@ import {useDispatch } from 'react-redux';
 export default function CurrentConversation({ currentConversation }) {
 
     const [pinnedMessages, setPinnedMessages] = useState([]);
+    const [currentPinnedMsgIndex, setCurrentPinnedMsgIndex] = useState(-1);
 
     useEffect(() => {
-        const pinnedMessageIds = [];
-        currentConversation.map(msg => {
-            if (msg.isPinned) {
-                pinnedMessageIds.push(msg.id);
-            }
-        });
+        const pinnedMessageIds = currentConversation.filter(msg => msg.isPinned).map(msg => msg.id);
         setPinnedMessages(pinnedMessageIds)
+        setCurrentPinnedMsgIndex(-1);
         console.log("pinnedMsgIds: ", pinnedMessages);
     }, [currentConversation])
 
@@ -32,24 +29,40 @@ export default function CurrentConversation({ currentConversation }) {
         }
     }
     function scrollNextPinnedMessage() {
-        const msg = currentConversation.find(message => message.isPinned);
-        if (msg.isPinned)
+        if (pinnedMessages.length === 0) {
+            console.log("No pinned messages found in conversation");
+            return;
+        }
+
+        const newPinnedMsgIndex = (currentPinnedMsgIndex + 1) % pinnedMessages.length;
+        const msgId = pinnedMessages[newPinnedMsgIndex];
+        const messageElement = document.getElementById(`message-${msgId}`);
+        if (messageElement)
         {
-            const messageElement = document.getElementById(`message-${msg.id}`);
-            if (messageElement)
-            {
-                messageElement.scrollIntoView({ behavior: 'smooth' });
-            }
+            messageElement.scrollIntoView({ behavior: 'smooth' });
+            setCurrentPinnedMsgIndex(newPinnedMsgIndex);
+        }
+        else {
+            console.error("Message element not found for id:", msgId);
         }
     }
 
-    function scrollPrevPinnedMessage() {
-        const msg = currentConversation.find(message => message.isPinned);
-        if (msg.isPinned) {
-            const messageElement = document.getElementById(`message-${msg.id}`);
-            if (messageElement) {
-                messageElement.scrollIntoView({ behavior: 'smooth' });
-            }
+    function scrollPrevPinnedMessage()
+    {
+        if (pinnedMessages.length === 0) {
+            console.log("No pinned messages found in conversation");
+            return;
+        }
+
+        const newPinnedMsgIndex = (currentPinnedMsgIndex - 1 + pinnedMessages.length) % pinnedMessages.length;
+        const msgId = pinnedMessages[newPinnedMsgIndex];
+        const messageElement = document.getElementById(`message-${msgId}`);
+        if (messageElement) {
+            messageElement.scrollIntoView({ behavior: 'smooth' });
+            setCurrentPinnedMsgIndex(newPinnedMsgIndex);
+        }
+        else {
+            console.error("Message element not found for id:", msgId);
         }
     }
 
